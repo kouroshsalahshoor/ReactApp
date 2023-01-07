@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
 import "react-toastify/dist/ReactToastify.min.css";
+import "react-datepicker/dist/react-datepicker.css";
 import { router } from "./app/router/Routes";
 
 const root = ReactDOM.createRoot(

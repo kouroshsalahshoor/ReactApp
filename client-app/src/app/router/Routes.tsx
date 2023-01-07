@@ -8,6 +8,7 @@ import About from "../../features/home/About";
 import Contact from "../../features/home/Contact";
 import App from "../layout/App";
 import Loading from "../layout/Loading";
+import { default as CreateEditEmployees } from "../../features/employees/CreateEdit";
 
 export const routes: RouteObject[] = [
   {
@@ -15,6 +16,9 @@ export const routes: RouteObject[] = [
     element: <App />,
     children: [
       { path: "employees", element: <Employees /> },
+      { path: "employees/create", element: <CreateEditEmployees /> },
+      { path: "employees/edit/:id", element: <CreateEditEmployees /> },
+
       { path: "about", element: <About /> },
       { path: "contact", element: <Contact /> },
       { path: "loading", element: <Loading /> },

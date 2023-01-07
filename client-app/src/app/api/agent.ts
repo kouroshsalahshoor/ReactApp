@@ -93,7 +93,8 @@ const requests = {
 
 const Employees = {
   list: () => requests.get<Employee[]>(`/employees`),
-  details: (id: string) => requests.get<Employee>(`/employees/${id}`),
+  details: (id: string | undefined) =>
+    requests.get<Employee>(`/employees/${id}`),
   create: (model: Employee) => requests.post<void>(`/employees`, model),
   update: (model: Employee) =>
     requests.put<void>(`/employees/${model.id}`, model),

@@ -1,13 +1,16 @@
 // import axios from "axios";
 import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import agent from "../../app/api/agent";
 import Loading from "../../app/layout/Loading";
 import { Employee } from "../../app/models/employee";
 
 export default function Index() {
-  const [list, setList] = useState<Employee[]>([]);
+  const [models, setModels] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(true);
   let row = 1;
+  const navigate = useNavigate();
 
   useEffect(() => {
     load();
@@ -24,7 +27,7 @@ export default function Index() {
     setLoading(true);
 
     agent.Employees.list().then((response) => {
-      setList(response);
+      setModels(response);
       setLoading(false);
     });
   };
@@ -32,13 +35,19 @@ export default function Index() {
   const onDelete = (id: number) => {
     const resp = window.confirm("Are you sure deleting this item?");
     if (resp) {
-      agent.Employees.delete(id.toString()).then((response) => load());
+      agent.Employees.delete(id.toString()).then((response) => {
+        toast.success("delete succeeded");
+        load();
+      });
     }
   };
 
   if (loading) return <Loading />;
   return (
     <>
+      <Link className="btn btn-primary" to="/employees/create">
+        Create
+      </Link>
       <table className="table table-striped table-hover table-sm">
         <thead>
           <tr>
@@ -50,7 +59,7 @@ export default function Index() {
           </tr>
         </thead>
         <tbody>
-          {list.map((x) => (
+          {models.map((x) => (
             <tr key={x.id}>
               <th scope="row">{row++}</th>
               <td>{x.id}</td>
@@ -58,7 +67,13 @@ export default function Index() {
               <td>{x.lastName}</td>
               <td>
                 <button
-                  className="btn btn-danger"
+                  className="btn btn-warning mx-1"
+                  onClick={() => navigate(`/employees/edit/${x.id}`)}
+                >
+                  Edit
+                </button>
+                <button
+                  className="btn btn-danger mx-1"
                   onClick={() => onDelete(x.id)}
                 >
                   Delete
