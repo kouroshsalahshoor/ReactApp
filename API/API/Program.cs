@@ -1,9 +1,14 @@
 using API.Data;
+using API.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,12 +30,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 //builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.SignIn.RequireConfirmedAccount = false)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
-
-//https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity-configuration?view=aspnetcore-7.0
-builder.Services.Configure<IdentityOptions>(options =>
+////https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity-configuration?view=aspnetcore-7.0
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
+    options.SignIn.RequireConfirmedAccount = false;
+
     // Default Password settings.
     options.Password.RequireDigit = false;
     options.Password.RequireLowercase = false;
@@ -52,7 +56,9 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
     options.Lockout.MaxFailedAccessAttempts = 5;
     options.Lockout.AllowedForNewUsers = false;
-});
+})
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
 
 //builder.Services.Configure<PasswordHasherOptions>(option =>
 //{
@@ -96,6 +102,42 @@ builder.Services.AddCors(opt =>
     });
 });
 
+var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["TokenKey"]));
+
+//https://stackoverflow.com/questions/45270467/what-is-the-replacement-for-cookies-applicationcookie-automaticchallenge-false
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddAuthentication(opts =>
+{
+    opts.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    opts.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(opt =>
+                {
+                    opt.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = key,
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        //ValidateLifetime=true,
+                        //ClockSkew=TimeSpan.Zero
+                    };
+                    //opt.Events = new JwtBearerEvents
+                    //{
+                    //    OnMessageReceived = context =>
+                    //    {
+                    //        var accessToken = context.Request.Query["access_token"];
+                    //        var path = context.HttpContext.Request.Path;
+                    //        if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/chat")))
+                    //        {
+                    //            context.Token = accessToken;
+                    //        }
+                    //        return Task.CompletedTask;
+                    //    }
+                    //};
+                });
+
+builder.Services.AddScoped<TokenService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -105,7 +147,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseCors("CorsPolicy");
 
@@ -118,7 +160,6 @@ app.MapControllers();
 var context = app.Services.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>();
 context.Database.Migrate();
 SeedData.SeedDatabase(context);
-IdentitySeedData.CreateAccounts(app.Services);
-//IdentitySeedData.CreateAccounts(app.Services, app.Configuration);
+IdentitySeedData.CreateAccounts(app.Services, app.Configuration);
 
 app.Run();

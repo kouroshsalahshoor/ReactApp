@@ -4,19 +4,18 @@ namespace API.Data
 {
     public class IdentitySeedData
     {
-        //public static void CreateAccounts(IServiceProvider serviceProvider, IConfiguration configuration)
-        public static void CreateAccounts(IServiceProvider serviceProvider)
+        public static void CreateAccounts(IServiceProvider serviceProvider, IConfiguration configuration)
         {
             serviceProvider = serviceProvider.CreateScope().ServiceProvider;
             UserManager<ApplicationUser> userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             RoleManager<ApplicationRole> roleManager = serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
 
-            //string username = configuration["Data:AdminUser:Name"] ?? "admin";
-            //string email = configuration["Data:AdminUser:Email"] ?? "admin@example.com";
-            //string password = configuration["Data:AdminUser:Password"] ?? "secret";
-            //string role = configuration["Data:AdminUser:Role"] ?? "Admins";
+            string adminUsername = configuration["Data:AdminUser:Name"] ?? "admin";
+            string adminPassword = configuration["Data:AdminUser:Password"] ?? "secret";
+            string adminRole = configuration["Data:AdminUser:Role"] ?? "Admins";
 
-            CreateAccountAsync(userManager, roleManager, "admin", "secret", "Admins").Wait();
+            CreateAccountAsync(userManager, roleManager, adminUsername, adminPassword, adminRole).Wait();
+            //CreateAccountAsync(userManager, roleManager, "admin", "secret", "Admins").Wait();
 
             CreateAccountAsync(userManager, roleManager, "e1", "1", "Employees").Wait();
             CreateAccountAsync(userManager, roleManager, "e2", "1", "Employees").Wait();
