@@ -45,9 +45,11 @@ export default function Index() {
   if (loading) return <Loading />;
   return (
     <>
+      <h3>Index</h3>
       <Link className="btn btn-primary" to="/employees/create">
         Create
       </Link>
+      <hr />
       <table className="table table-striped table-hover table-sm">
         <thead>
           <tr>
@@ -55,7 +57,7 @@ export default function Index() {
             <th scope="col">Id</th>
             <th scope="col">First Name</th>
             <th scope="col">Last Name</th>
-            <th scope="col"></th>
+            <th scope="col" className="fit"></th>
           </tr>
         </thead>
         <tbody>
@@ -65,7 +67,13 @@ export default function Index() {
               <td>{x.id}</td>
               <td>{x.firstName}</td>
               <td>{x.lastName}</td>
-              <td>
+              <td className="fit">
+                <button
+                  className="btn btn-info mx-1"
+                  onClick={() => navigate(`/employees/details/${x.id}`)}
+                >
+                  Details
+                </button>
                 <button
                   className="btn btn-warning mx-1"
                   onClick={() => navigate(`/employees/edit/${x.id}`)}

@@ -5,6 +5,7 @@ import reportWebVitals from "./reportWebVitals";
 import "react-toastify/dist/ReactToastify.min.css";
 import "react-datepicker/dist/react-datepicker.css";
 import { router } from "./app/router/Routes";
+import "./app/layout/styles.css";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

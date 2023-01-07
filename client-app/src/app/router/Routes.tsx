@@ -9,6 +9,7 @@ import Contact from "../../features/home/Contact";
 import App from "../layout/App";
 import Loading from "../layout/Loading";
 import { default as CreateEditEmployees } from "../../features/employees/CreateEdit";
+import Details from "../../features/employees/Details";
 
 export const routes: RouteObject[] = [
   {
@@ -18,6 +19,7 @@ export const routes: RouteObject[] = [
       { path: "employees", element: <Employees /> },
       { path: "employees/create", element: <CreateEditEmployees /> },
       { path: "employees/edit/:id", element: <CreateEditEmployees /> },
+      { path: "employees/details/:id", element: <Details /> },
 
       { path: "about", element: <About /> },
       { path: "contact", element: <Contact /> },
