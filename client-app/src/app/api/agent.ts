@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { Employee } from "../models/employee";
+import { LoginModel, UserModel } from "../models/userModel";
 import { router } from "../router/Routes";
 // import { Activity, ActivityFormValues } from '../models/employee';
 // import { PaginatedResult } from '../models/pagination';
@@ -61,7 +62,7 @@ axios.interceptors.response.use(
         break;
       case 401:
         toast.error("unauthorised");
-        router.navigate("/unauthorized");
+        // router.navigate("/unauthorized");
         break;
       case 403:
         toast.error("forbidden");
@@ -115,16 +116,16 @@ const Employees = {
 //   attend: (id: string) => requests.post<void>(`/activities/${id}/attend`, {}),
 // };
 
-// const Account = {
-//   current: () => requests.get<User>("account"),
-//   login: (user: UserFormValues) => requests.post<User>("/account/login", user),
-//   register: (user: UserFormValues) =>
-//     requests.post<User>("/account/register", user),
-// };
+const Account = {
+  current: () => requests.get<UserModel>("account"),
+  login: (user: LoginModel) => requests.post<UserModel>("/account/login", user),
+  register: (user: LoginModel) =>
+    requests.post<UserModel>("/account/register", user),
+};
 
 const agent = {
   Employees,
-  // Account,
+  Account,
 };
 
 export default agent;

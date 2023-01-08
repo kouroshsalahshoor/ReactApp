@@ -7,9 +7,10 @@ import ValidationError from "../../features/errors/ValidationError";
 import About from "../../features/home/About";
 import Contact from "../../features/home/Contact";
 import App from "../layout/App";
-import Loading from "../layout/Loading";
+import Loading from "../common/Loading";
 import { default as CreateEditEmployees } from "../../features/employees/CreateEdit";
 import Details from "../../features/employees/Details";
+import Login from "../../features/account/Login";
 
 export const routes: RouteObject[] = [
   {
@@ -24,6 +25,8 @@ export const routes: RouteObject[] = [
       { path: "about", element: <About /> },
       { path: "contact", element: <Contact /> },
       { path: "loading", element: <Loading /> },
+
+      { path: "login", element: <Login /> },
 
       { path: "test-errors", element: <TestErrors /> },
       { path: "not-found", element: <NotFound /> },

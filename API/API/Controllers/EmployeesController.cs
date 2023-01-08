@@ -22,7 +22,7 @@ namespace API.Controllers
             _context = context;
         }
 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         // GET: api/Employees
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()

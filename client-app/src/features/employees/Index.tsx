@@ -1,48 +1,29 @@
-// import axios from "axios";
-import { useEffect, useState } from "react";
+import { observer } from "mobx-react-lite";
+import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import agent from "../../app/api/agent";
-import Loading from "../../app/layout/Loading";
-import { Employee } from "../../app/models/employee";
+import Loading from "../../app/common/Loading";
+import { useStore } from "../../app/stores/store";
 
-export default function Index() {
-  const [models, setModels] = useState<Employee[]>([]);
-  const [loading, setLoading] = useState(true);
+export default observer(function Index() {
+  const { employeesStore } = useStore();
+
   let row = 1;
   const navigate = useNavigate();
 
   useEffect(() => {
-    load();
-
-    // axios
-    //   .get<Employee[]>("https://localhost:7236/api/Employees")
-    //   .then((response) => {
-    //     // console.log(response);
-    //     setList(response.data);
-    //   });
-  }, []);
-
-  const load = () => {
-    setLoading(true);
-
-    agent.Employees.list().then((response) => {
-      setModels(response);
-      setLoading(false);
-    });
-  };
+    employeesStore.load();
+  }, [employeesStore]);
 
   const onDelete = (id: number) => {
     const resp = window.confirm("Are you sure deleting this item?");
     if (resp) {
-      agent.Employees.delete(id.toString()).then((response) => {
-        toast.success("delete succeeded");
-        load();
-      });
+      employeesStore.delete(id);
     }
   };
 
-  if (loading) return <Loading />;
+  if (employeesStore.isLoading) return <Loading />;
   return (
     <>
       <h3>Index</h3>
@@ -61,7 +42,7 @@ export default function Index() {
           </tr>
         </thead>
         <tbody>
-          {models.map((x) => (
+          {employeesStore.list.map((x) => (
             <tr key={x.id}>
               <th scope="row">{row++}</th>
               <td>{x.id}</td>
@@ -93,4 +74,4 @@ export default function Index() {
       </table>
     </>
   );
-}
+});

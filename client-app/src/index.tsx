@@ -6,14 +6,17 @@ import "react-toastify/dist/ReactToastify.min.css";
 import "react-datepicker/dist/react-datepicker.css";
 import { router } from "./app/router/Routes";
 import "./app/layout/styles.css";
+import { store, StoreContext } from "./app/stores/store";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
+  <StoreContext.Provider value={store}>
     <RouterProvider router={router} />
-  </React.StrictMode>
+  </StoreContext.Provider>
+  // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

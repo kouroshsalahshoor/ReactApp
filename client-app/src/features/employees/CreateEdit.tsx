@@ -2,7 +2,7 @@ import { Form, Formik, Field, ErrorMessage } from "formik";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import agent from "../../app/api/agent";
-import Loading from "../../app/layout/Loading";
+import Loading from "../../app/common/Loading";
 import { Employee } from "../../app/models/employee";
 import * as Yup from "yup";
 import TextInput from "../../app/common/form/TextInput";
@@ -10,17 +10,20 @@ import TextAreaInput from "../../app/common/form/TextAreaInput";
 import SelectInput from "../../app/common/form/SelectInput";
 import DateInput from "../../app/common/form/DateInput";
 import { toast } from "react-toastify";
+import { useStore } from "../../app/stores/store";
+import { observer } from "mobx-react-lite";
 
-export default function CreateEdit() {
+export default observer(function CreateEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const { employeesStore } = useStore();
 
   const [model, setModel] = useState<Employee>({
     id: 0,
     firstName: "",
     lastName: "",
   });
-  const [loading, setLoading] = useState(true);
 
   // const options = [
   //   { text: "Drinks", value: "drinks" },
@@ -37,32 +40,22 @@ export default function CreateEdit() {
   });
 
   useEffect(() => {
-    setLoading(true);
+    employeesStore.setLoading(true);
 
     if (id) {
-      agent.Employees.details(id).then((response) => {
-        setModel(response);
-      });
+      employeesStore.setSelectedItem(id);
+      setModel(employeesStore.selectedItem);
     }
 
-    setLoading(false);
+    employeesStore.setLoading(false);
   }, []);
 
-  function submit(model: Employee) {
-    if (model.id > 0) {
-      agent.Employees.update(model).then(() => {
-        toast.success("edit succeeded");
-        navigate("/employees");
-      });
-    } else {
-      agent.Employees.create(model).then(() => {
-        toast.success("create succeeded");
-        navigate("/employees");
-      });
-    }
-  }
+  const submit = (values) => {
+    employeesStore.createEdit(values);
+    navigate("/employees");
+  };
 
-  if (loading) return <Loading />;
+  if (employeesStore.isLoading) return <Loading />;
 
   return (
     <div className="mt-5">
@@ -108,4 +101,4 @@ export default function CreateEdit() {
       </Formik>
     </div>
   );
-}
+});

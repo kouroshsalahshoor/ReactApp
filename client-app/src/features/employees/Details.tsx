@@ -1,18 +1,20 @@
-import axios from "axios";
+import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
-import { Employee } from "../../app/models/employee";
+import { useParams } from "react-router-dom";
+import { useStore } from "../../app/stores/store";
 
-export default function Details() {
-  const [model, setModel] = useState<Employee>();
+export default observer(function Details() {
+  const { employeesStore } = useStore();
+
+  const { id } = useParams();
 
   useEffect(() => {
-    axios
-      .get<Employee>("https://localhost:7236/api/Employees/1")
-      .then((response) => {
-        // console.log(response);
-        setModel(response.data);
-      });
+    employeesStore.setSelectedItem(id!);
   }, []);
+
+  if (!employeesStore.selectedItem) {
+    return <h3>no item</h3>;
+  }
 
   return (
     <>
@@ -29,18 +31,18 @@ export default function Details() {
         <tbody>
           <tr>
             <th scope="row">Id</th>
-            <td>{model?.id}</td>
+            <td>{employeesStore.selectedItem?.id}</td>
           </tr>
           <tr>
             <th scope="row">First Name</th>
-            <td>{model?.firstName}</td>
+            <td>{employeesStore.selectedItem?.firstName}</td>
           </tr>
           <tr>
             <th scope="row">last Name</th>
-            <td>{model?.lastName}</td>
+            <td>{employeesStore.selectedItem?.lastName}</td>
           </tr>
         </tbody>
       </table>
     </>
   );
-}
+});

@@ -1,7 +1,13 @@
-import React from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
 export default function Menu() {
+  const navigate = useNavigate();
+
+  const logout = () => {
+    window.localStorage.removeItem("jwt");
+    navigate("/");
+  };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
       <div className="container-fluid">
@@ -104,8 +110,8 @@ export default function Menu() {
                 style={{ left: "auto", right: 0 }}
               >
                 <li>
-                  <a className="dropdown-item" href="#">
-                    Action
+                  <a className="dropdown-item" href="/login">
+                    Login
                   </a>
                 </li>
                 <li>
@@ -117,9 +123,9 @@ export default function Menu() {
                   <hr className="dropdown-divider" />
                 </li>
                 <li>
-                  <a className="dropdown-item" href="#">
-                    Something else here
-                  </a>
+                  <button className="dropdown-item" onClick={logout}>
+                    Logout
+                  </button>
                 </li>
               </ul>
             </li>
