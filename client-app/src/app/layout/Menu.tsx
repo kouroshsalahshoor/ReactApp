@@ -99,11 +99,13 @@ export default observer(function Menu() {
                     </li>
                   </ul>
                 </li>
-                {/* <li className="nav-item">
-                        <a className="nav-link disabled" href="#" aria-disabled="true">
-                          Disabled
-                        </a>
-                      </li> */}
+                {accountStore.isInRole("Customers") ? (
+                  <li className="nav-item">
+                    <a className="nav-link" href="#">
+                      Customers
+                    </a>
+                  </li>
+                ) : null}
               </ul>
 
               <ul className="navbar-nav d-flex">
@@ -117,7 +119,13 @@ export default observer(function Menu() {
                     aria-expanded="false"
                   >
                     <>
-                      Welcome {accountStore.user.userName}
+                      Welcome{" "}
+                      {accountStore.isInRole("Customers") ? "Customer" : null}
+                      {accountStore.isInRole("Admins") ? "Admin" : null}
+                      {accountStore.isInRole("Employees") ? "Employee" : null}
+                      {accountStore.isInRole("Managers") ? "Manager" : null}
+                      {": "}
+                      {accountStore.user.userName}
                       <i className="fa-solid fa-user mx-1"></i>
                     </>
                   </a>

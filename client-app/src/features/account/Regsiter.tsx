@@ -14,14 +14,14 @@ export default observer(function Regsiter() {
         accountStore.register(values).catch((error) => setErrors({ error }))
       }
       validationSchema={Yup.object({
-        username: Yup.string().required(),
+        userName: Yup.string().required(),
         password: Yup.string().required(),
       })}
     >
       {({ handleSubmit, isSubmitting, errors, isValid, dirty }) => (
         <Form className="error" onSubmit={handleSubmit} autoComplete="off">
           <h3 className="text-center text-info">Register</h3>
-          <TextInput placeholder="User Name" name="username" />
+          <TextInput placeholder="User Name" name="userName" />
           <TextInput placeholder="Password" name="password" type="password" />
           <ErrorMessage
             name="error"

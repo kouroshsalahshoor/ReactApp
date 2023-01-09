@@ -15,6 +15,14 @@ export default class AccountStore {
     return !!this.user;
   }
 
+  isInRole = (role: string) => {
+    if (this.user) {
+      return this.user.roles.includes(role);
+    }
+
+    return false;
+  };
+
   login = async (creds: LoginModel) => {
     try {
       const user = await agent.Account.login(creds);

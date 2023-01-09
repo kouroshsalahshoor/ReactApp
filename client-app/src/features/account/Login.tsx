@@ -14,14 +14,16 @@ export default observer(function Login() {
     <Formik
       initialValues={{ userName: "", password: "", error: null }}
       // onSubmit={async (values, { setErrors }) => {
-      onSubmit={(values, { setErrors }) => {
+      onSubmit={(values, { setErrors, setSubmitting }) => {
         try {
-          accountStore
-            .login(values)
-            .catch((error) => setErrors({ error: "Invalid user or password" }));
-          // console.log(values);
+          accountStore.login(values).catch((error) => {
+            setErrors({ error: "Invalid user or password" });
+            setSubmitting(false);
+          });
+          console.log(values);
         } catch (error) {
           setErrors({ error: "Invalid user or password" });
+          setSubmitting(false);
         }
       }}
     >

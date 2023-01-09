@@ -17,7 +17,6 @@ namespace API.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly TokenService _tokenService;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly RoleManager<ApplicationRole> _roleManager;
 
         public AccountController(UserManager<ApplicationUser> userManager, TokenService tokenService,
             SignInManager<ApplicationUser> signInManager)
@@ -36,7 +35,7 @@ namespace API.Controllers
             if (result.Succeeded)
             {
                 var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == loginModel.UserName);
-                return CreateUserObject(user);
+                return await CreateUserObject(user);
             }
 
             return Unauthorized("Incorrect Login");
@@ -67,7 +66,7 @@ namespace API.Controllers
                     registerModel.Role = "Customers";
                 }
                 await _userManager.AddToRoleAsync(user, registerModel.Role);
-                return CreateUserObject(user);
+                return await CreateUserObject(user);
             }
 
             return BadRequest(result.Errors);
@@ -79,16 +78,19 @@ namespace API.Controllers
         {
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == User.FindFirstValue(ClaimTypes.Name));
 
-            return CreateUserObject(user);
+            return await CreateUserObject(user);
         }
 
-        private UserModel CreateUserObject(ApplicationUser user)
+        private async Task<UserModel> CreateUserObject(ApplicationUser user)
         {
+            var roles = await _userManager.GetRolesAsync(user);
+
             return new UserModel
             {
                 UserName = user.UserName,
                 Token = _tokenService.CreateToken(user),
-                Expiration = DateTime.Now.AddDays(1)
+                Expiration = DateTime.Now.AddDays(1),
+                Roles = roles.ToList()
             };
         }
     }

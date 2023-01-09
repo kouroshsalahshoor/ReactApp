@@ -1,5 +1,5 @@
 interface Props {
-  errors?: any | null;
+  errors?: any;
 }
 
 export default function ValidationError({ errors }: Props) {

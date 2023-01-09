@@ -11,6 +11,17 @@ export default observer(function Index() {
     <div className="text-center">
       <h3>Index</h3>
 
+      <p>
+        {accountStore.isInRole("Customers")
+          ? "is a customer"
+          : "is not a customer"}
+      </p>
+      <p>
+        {accountStore.isInRole("Admins") ? "is an admin" : "is not an admin"}
+      </p>
+
+      <p>{accountStore.user ? accountStore.user.roles : null}</p>
+
       {accountStore.isLoggedIn ? (
         <h3>Welcome</h3>
       ) : (
