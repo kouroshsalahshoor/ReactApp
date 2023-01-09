@@ -8,7 +8,7 @@ import { router } from "../router/Routes";
 // import { Photo, Profile, UserActivity } from '../models/profile';
 // import { User, UserFormValues } from '../models/user';
 // import { router } from '../router/Routes';
-// import { store } from '../stores/store';
+import { store } from "../stores/store";
 
 const sleep = (delay: number) => {
   return new Promise((resolve) => {
@@ -21,15 +21,18 @@ axios.defaults.baseURL = "https://localhost:7236/api";
 
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
-// axios.interceptors.request.use(config => {
-//     const token = store.commonStore.token;
-//     if (token && config.headers) config.headers.Authorization = `Bearer ${token}`;
-//     return config;
-// })
+axios.interceptors.request.use((config) => {
+  const token = store.commonStore.token;
+  if (token && config.headers) {
+    // works only with axios 1.2.0 so I locked it
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 axios.interceptors.response.use(
   async (response) => {
-    if (process.env.NODE_ENV === "development") await sleep(1000);
+    if (process.env.NODE_ENV === "development") await sleep(3000);
     // const pagination = response.headers["pagination"];
     // if (pagination) {
     //   response.data = new PaginatedResult(
@@ -44,7 +47,7 @@ axios.interceptors.response.use(
     const { data, status, config } = error.response as AxiosResponse;
     switch (status) {
       case 400:
-        toast.error("bad-request");
+        // toast.error("bad-request");
         // if (config.method === "get" && data.errors.hasOwnProperty("id")) {
         //   // router.navigate("/not-found");
         // }
@@ -61,7 +64,7 @@ axios.interceptors.response.use(
         }
         break;
       case 401:
-        toast.error("unauthorised");
+        // toast.error("unauthorised");
         // router.navigate("/unauthorized");
         break;
       case 403:
@@ -117,7 +120,7 @@ const Employees = {
 // };
 
 const Account = {
-  current: () => requests.get<UserModel>("account"),
+  current: () => requests.get<UserModel>("/account"),
   login: (user: LoginModel) => requests.post<UserModel>("/account/login", user),
   register: (user: LoginModel) =>
     requests.post<UserModel>("/account/register", user),

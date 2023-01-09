@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Data;
+using System.Security.Claims;
 using API.Data;
 using API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -16,8 +17,10 @@ namespace API.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly TokenService _tokenService;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
 
-        public AccountController(UserManager<ApplicationUser> userManager, TokenService tokenService, SignInManager<ApplicationUser> signInManager)
+        public AccountController(UserManager<ApplicationUser> userManager, TokenService tokenService,
+            SignInManager<ApplicationUser> signInManager)
         {
             _tokenService = tokenService;
             _signInManager = signInManager;
@@ -59,6 +62,11 @@ namespace API.Controllers
 
             if (result.Succeeded)
             {
+                if (string.IsNullOrEmpty(registerModel.Role))
+                {
+                    registerModel.Role = "Customers";
+                }
+                await _userManager.AddToRoleAsync(user, registerModel.Role);
                 return CreateUserObject(user);
             }
 

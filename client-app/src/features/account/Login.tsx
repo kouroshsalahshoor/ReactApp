@@ -1,21 +1,25 @@
 import { ErrorMessage, Form, Formik } from "formik";
+import { observer } from "mobx-react-lite";
 import { useNavigate } from "react-router-dom";
 import agent from "../../app/api/agent";
 import TextInput from "../../app/common/form/TextInput";
+import Loading from "../../app/common/Loading";
+import { useStore } from "../../app/stores/store";
 
-export default function Login() {
+export default observer(function Login() {
+  const { accountStore, modalStore } = useStore();
   const navigate = useNavigate();
 
   return (
     <Formik
       initialValues={{ userName: "", password: "", error: null }}
-      onSubmit={async (values, { setErrors }) => {
+      // onSubmit={async (values, { setErrors }) => {
+      onSubmit={(values, { setErrors }) => {
         try {
-          console.log(values);
-          const user = await agent.Account.login(values);
-          console.log(user);
-          window.localStorage.setItem("jwt", user.token);
-          navigate("/");
+          accountStore
+            .login(values)
+            .catch((error) => setErrors({ error: "Invalid user or password" }));
+          // console.log(values);
         } catch (error) {
           setErrors({ error: "Invalid user or password" });
         }
@@ -23,7 +27,7 @@ export default function Login() {
     >
       {({ handleSubmit, isSubmitting, errors }) => (
         <Form onSubmit={handleSubmit} autoComplete="off">
-          <h2 className="text-center text-info">Login</h2>
+          <p className="text-center text-info">Login</p>
           <TextInput placeholder="User Name" name="userName" />
           <TextInput placeholder="Password" name="password" type="password" />
 
@@ -33,6 +37,14 @@ export default function Login() {
               disabled={isSubmitting}
               type="submit"
             >
+              {isSubmitting ? (
+                <div
+                  className="spinner-border spinner-border-sm text-light"
+                  role="status"
+                >
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+              ) : null}
               Login
             </button>
           </div>
@@ -42,7 +54,7 @@ export default function Login() {
             render={() => (
               <div className="my-2 text-center">
                 <span className="text-danger" style={{ marginBottom: 10 }}>
-                  {/* {errors.error} */}
+                  {errors.error.toString()}
                 </span>
               </div>
             )}
@@ -51,4 +63,4 @@ export default function Login() {
       )}
     </Formik>
   );
-}
+});
