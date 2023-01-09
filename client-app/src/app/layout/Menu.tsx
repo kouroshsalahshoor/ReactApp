@@ -1,10 +1,9 @@
 import { observer } from "mobx-react-lite";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useStore } from "../stores/store";
 
 export default observer(function Menu() {
   const { accountStore } = useStore();
-  const navigate = useNavigate();
 
   const logout = () => {
     accountStore.logout();
@@ -37,12 +36,30 @@ export default observer(function Menu() {
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                 <li className="nav-item">
                   <NavLink
-                    className="nav-link active"
+                    className="nav-link"
                     aria-current="page"
                     to="/employees"
                   >
                     Employees
                   </NavLink>
+                </li>
+                <li className="nav-item dropdown">
+                  <a
+                    className="nav-link dropdown-toggle"
+                    href="/"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    Adam Freeman
+                  </a>
+                  <ul className="dropdown-menu">
+                    <li>
+                      <NavLink className="dropdown-item" to="/todolist">
+                        ToDo List
+                      </NavLink>
+                    </li>
+                  </ul>
                 </li>
                 <li className="nav-item">
                   <NavLink className="nav-link" to="/about">
@@ -62,7 +79,7 @@ export default observer(function Menu() {
                 <li className="nav-item dropdown">
                   <a
                     className="nav-link dropdown-toggle"
-                    href="#"
+                    href="/"
                     id="navbarDropdown"
                     role="button"
                     data-bs-toggle="dropdown"
@@ -101,9 +118,9 @@ export default observer(function Menu() {
                 </li>
                 {accountStore.isInRole("Customers") ? (
                   <li className="nav-item">
-                    <a className="nav-link" href="#">
+                    <NavLink className="nav-link" to="/">
                       Customers
-                    </a>
+                    </NavLink>
                   </li>
                 ) : null}
               </ul>
@@ -112,7 +129,7 @@ export default observer(function Menu() {
                 <li className="nav-item dropdown">
                   <a
                     className="nav-link dropdown-toggle"
-                    href="#"
+                    href="/"
                     id="navbarDropdown"
                     role="button"
                     data-bs-toggle="dropdown"

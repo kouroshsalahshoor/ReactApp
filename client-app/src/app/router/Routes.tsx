@@ -13,6 +13,7 @@ import Details from "../../features/employees/Details";
 import Login from "../../features/account/Login";
 import RequireAuth from "./RequireAuth";
 import ServerError from "../../features/errors/ServerError";
+import { Index } from "../../features/Todo/Index";
 
 export const routes: RouteObject[] = [
   {
@@ -28,6 +29,8 @@ export const routes: RouteObject[] = [
           { path: "employees/details/:id", element: <Details /> },
         ],
       },
+
+      { path: "todolist", element: <Index /> },
 
       { path: "about", element: <About /> },
       { path: "contact", element: <Contact /> },
