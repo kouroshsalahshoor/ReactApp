@@ -14,7 +14,7 @@ export const Index = () => {
 
   const [userName, setUserName] = useState("Adam");
   const [newItemText, setNewItemText] = useState("");
-  const [todoItems, setTodoItems] = useState(todoItemsInit);
+  const [todoItems, setTodoItems] = useState([]);
   const [showCompleted, setShowCompleted] = useState(true);
 
   // const updateNewTextValue = (event) => {
@@ -22,10 +22,13 @@ export const Index = () => {
   // };
 
   const createNewTodo = (task) => {
-    if (task.trim() !== "" && !todoItems.find((item) => item.action === task)) {
-      setTodoItems([...todoItems, { action: task, done: false }]);
-
-      localStorage.setItem("todos", JSON.stringify(todoItems));
+    if (
+      task.trim() !== "" &&
+      todoItems.find((item) => item.action === task) === undefined
+    ) {
+      const newList = [...todoItems, { action: task, done: false }];
+      setTodoItems(newList);
+      localStorage.setItem("todos", JSON.stringify(newList));
     }
   };
 
@@ -49,10 +52,12 @@ export const Index = () => {
     setShowCompleted(true);
 
     let data = localStorage.getItem("todos");
-    if (data === null) {
-      localStorage.setItem("todos", JSON.stringify(todoItems));
-    } else {
+    console.log(data);
+    if (data) {
       setTodoItems(JSON.parse(data));
+    } else {
+      localStorage.setItem("todos", JSON.stringify(todoItemsInit));
+      setTodoItems(todoItemsInit);
     }
   }, []);
 
