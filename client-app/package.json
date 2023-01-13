@@ -23,6 +23,7 @@
     "react-toastify": "^9.1.1",
     "typescript": "^4.9.4",
     "uuid": "^9.0.0",
+    "validator": "^10.7.1",
     "web-vitals": "^2.1.4",
     "yup": "^0.32.11"
   },

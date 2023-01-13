@@ -23,7 +23,14 @@ export default observer(function Index() {
       <p>{accountStore.user ? accountStore.user.roles : null}</p>
 
       {accountStore.isLoggedIn ? (
-        <h3>Welcome</h3>
+        <>
+          <h3>Welcome</h3>
+          <div>
+            <button className="btn btn-primary" onClick={accountStore.logout}>
+              log out
+            </button>
+          </div>
+        </>
       ) : (
         <div>
           <button

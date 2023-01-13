@@ -16,7 +16,7 @@ export default class EmployeesStore {
   load = async () => {
     this.setLoading(true);
 
-    let list = await agent.Employees.list();
+    const list = await agent.Employees.list();
 
     runInAction(() => {
       //do something with the list
@@ -51,10 +51,19 @@ export default class EmployeesStore {
 
     try {
       if (model.id > 0) {
-        await agent.Employees.update(model);
+        const result = await agent.Employees.update(model);
+        runInAction(() => {
+          this.list = [
+            ...this.list.map((x) => (x.id === result.id ? result : x)),
+          ];
+        });
+
         toast.success("edit succeeded");
       } else {
-        await agent.Employees.create(model);
+        const result = await agent.Employees.create(model);
+        runInAction(() => {
+          this.list = [...this.list, result];
+        });
         toast.success("create succeeded");
       }
     } catch (error) {

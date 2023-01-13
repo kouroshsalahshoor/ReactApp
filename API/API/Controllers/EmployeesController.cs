@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using API.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using API.Data;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace API.Controllers
 {
@@ -47,7 +40,7 @@ namespace API.Controllers
         // PUT: api/Employees/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEmployee(int id, Employee employee)
+        public async Task<ActionResult<Employee>> PutEmployee(int id, Employee employee)
         {
             if (id != employee.Id)
             {
@@ -72,7 +65,8 @@ namespace API.Controllers
                 }
             }
 
-            return NoContent();
+            return CreatedAtAction("GetEmployee", new { id = employee.Id }, employee);
+            //return NoContent();
         }
 
         // POST: api/Employees

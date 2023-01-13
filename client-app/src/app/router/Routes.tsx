@@ -13,7 +13,9 @@ import Details from "../../features/employees/Details";
 import Login from "../../features/account/Login";
 import RequireAuth from "./RequireAuth";
 import ServerError from "../../features/errors/ServerError";
-import { Index } from "../../features/Todo/Index";
+import { Index as TodoList } from "../../features/todo/Index";
+import { Index as ThemeSelector } from "../../features/themeSelector/Index";
+import { Editor } from "../../features/form/Editor";
 
 export const routes: RouteObject[] = [
   {
@@ -30,7 +32,9 @@ export const routes: RouteObject[] = [
         ],
       },
 
-      { path: "todolist", element: <Index /> },
+      { path: "todolist", element: <TodoList /> },
+      { path: "themeselector", element: <ThemeSelector /> },
+      { path: "editor", element: <Editor /> },
 
       { path: "about", element: <About /> },
       { path: "contact", element: <Contact /> },

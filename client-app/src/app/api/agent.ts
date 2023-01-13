@@ -32,7 +32,7 @@ axios.interceptors.request.use((config) => {
 
 axios.interceptors.response.use(
   async (response) => {
-    if (process.env.NODE_ENV === "development") await sleep(3000);
+    if (process.env.NODE_ENV === "development") await sleep(1000);
     // const pagination = response.headers["pagination"];
     // if (pagination) {
     //   response.data = new PaginatedResult(
@@ -99,9 +99,9 @@ const Employees = {
   list: () => requests.get<Employee[]>(`/employees`),
   details: (id: string | undefined) =>
     requests.get<Employee>(`/employees/${id}`),
-  create: (model: Employee) => requests.post<void>(`/employees`, model),
+  create: (model: Employee) => requests.post<Employee>(`/employees`, model),
   update: (model: Employee) =>
-    requests.put<void>(`/employees/${model.id}`, model),
+    requests.put<Employee>(`/employees/${model.id}`, model),
   delete: (id: string) => requests.del<void>(`/employees/${id}`),
 };
 

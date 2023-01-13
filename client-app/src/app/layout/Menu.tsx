@@ -59,6 +59,16 @@ export default observer(function Menu() {
                         ToDo List
                       </NavLink>
                     </li>
+                    <li>
+                      <NavLink className="dropdown-item" to="/themeselector">
+                        Theme Selector
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink className="dropdown-item" to="/editor">
+                        Editor
+                      </NavLink>
+                    </li>
                   </ul>
                 </li>
                 <li className="nav-item">
